@@ -1,0 +1,37 @@
+SAMPLES, = glob_wildcards('data/fastq_renamed/{samples}.1.fastq.gz')
+
+
+rule all:
+    input:
+          expand ('data/ivar_output/coverage/{sample}.coverage_name', sample=SAMPLES),
+          expand ('data/ivar_output/coverage/{sample}.coverage_name', sample=SAMPLES),
+          expand ('data/ivar_output/coverage/{sample}.avg', sample=SAMPLES),
+          #expand ('data/aligned_output/coverage_consensus/{sample}_2.avg', sample=SAMPLES),
+          'Coverage.all',
+          'AvgCoverage.all',
+
+rule add_name_coverage_1:
+     input:
+          inputA = 'data/ivar_output/coverage/{sample}.coverage.csv'
+
+     output:
+          sample1 = 'data/ivar_output/coverage/{sample}.coverage_name',
+          average1 = 'data/ivar_output/coverage/{sample}.avg'
+
+     script:
+          'coverage.R'
+
+
+rule collapse_files:
+     input:
+         A = expand ('data/ivar_output/coverage/{sample}.coverage_name', sample=SAMPLES),
+         B = expand ('data/ivar_output/coverage/{sample}.avg', sample=SAMPLES)
+     output:
+          A = "Coverage.all",
+          B = "AvgCoverage.all"
+
+     shell:
+          """
+          awk 'NR == 1 || FNR > 1'  {input.A}  >  {output.A}
+          awk 'NR == 1 || FNR > 1'  {input.B} > {output.B}
+          """
