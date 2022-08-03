@@ -1,4 +1,4 @@
-# SARS-CoV-2_Hosehold_Diversity
+# SARS-CoV-2_Household_Diversity
 This repository holds information related to our paper on SARS-CoV-2 genetic diversity within households. Below is a map of the repository structure.
 
 # Overview
